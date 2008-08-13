@@ -9,6 +9,17 @@ use Doc::Simply::Extractor;
 
 plan qw/no_plan/;
 
+{
+    my $extractor = Doc::Simply::Extractor::SlashStar->new;
+    my $comments = $extractor->extract(<<_END_)
+_END_
+}
+
+
+ok(1);
+
+__END__
+
 my $extractor = Doc::Simply::Extractor->new(
     filter => sub {
         s/^\s*#\s*//;
