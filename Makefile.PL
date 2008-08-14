@@ -1,4 +1,8 @@
 use inc::Module::Install;
+
+name 'Doc-Simply';
+all_from 'lib/Doc/Simply.pm';
+
 {
     require ExtUtils::MakeMaker;
     use strict;
@@ -13,14 +17,17 @@ use inc::Module::Install;
 }
 
 {
+    map { my ($pk, $vr) = split m/\s/; build_requires $pk => $vr || 0 } grep { ! /^\s*#/ } split m/\n/, <<_END_;
+Test::More
+Test::Most
+_END_
+
     map { my ($pk, $vr) = split m/\s/; requires $pk => $vr || 0 } grep { ! /^\s*#/ } split m/\n/, <<_END_;
+Getopt::Chain
 _END_
 }
 
-name 'Doc-Simply';
-all_from 'lib/Doc/Simply.pm';
-
-build_requires 'Test::More';
+install_script glob('script/doc-simply');
 
 auto_install;
 

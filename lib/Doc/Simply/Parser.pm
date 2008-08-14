@@ -14,12 +14,15 @@ sub parse {
 
     my $document = my $root_node = $self->node(tag => 'root');
 
-    my (%state, $previous_node, $node, $content_node);
+    my (%state, $previous_node, $node);
 
     $previous_node = $root_node;
 
     for my $block (@$blocks) {
+
         my @content = @$block;
+        my $content_node;
+
         for my $line (@content) {
             if ($line =~ m/^[@|=](\w+)(?:\s+(.*))?$/) {
                 my ($tag, $content) = ($1, $2);
@@ -89,14 +92,23 @@ sub add_node {
     return $parent_node;
 }
 
+sub content_of {
+    my $self = shift;
+    return join " ", $self->tag, $self->content;
+}
+
 sub content_from {
     my $self = shift;
     my $content = "";
+
     $self->walk_down({ callback => sub {
         my $node = shift;
-        $content .= $node->content;
+        my $_content = $node->content_of;
+        chomp $_content;
+        $content .= "$_content\n";
         return 1;
     } });
+
     return $content;
 }
 
