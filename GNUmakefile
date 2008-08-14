@@ -1,6 +1,6 @@
 .PHONY: all test time clean distclean dist distcheck upload distupload
 
-all: test
+all: lib/Doc/Simply/Parser/Grammar.pm test
 
 dist:
 	rm -rf inc META.y*ml
@@ -9,6 +9,9 @@ dist:
 
 distclean tardist: Makefile
 	$(MAKE) -f $< $@
+
+lib/Doc/Simply/Parser/Grammar.pm: yapp/DCPG.yp
+	yapp -m Doc::Simple::Parser::Grammar -o $@ $<
 
 test: Makefile
 	TEST_RELEASE=1 $(MAKE) -f $< $@

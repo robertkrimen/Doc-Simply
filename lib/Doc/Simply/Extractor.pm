@@ -1,7 +1,10 @@
 package Doc::Simply::Extractor;
 
-use Moose;
-use Doc::Simply::Carp;
+use strict;
+use warnings;
+
+use Text::FixEOL;
+our $fixer = Text::FixEOL->new;
 
 package Doc::Simply::Extractor::SlashStar;
 
@@ -16,7 +19,14 @@ sub extract {
 
     return unless $source;
 
-    my @comments = String::Comments::Extract::JavaScript->collect($source);
+    $source = $fixer->fix_eol($source);
+    my $comments = String::Comments::Extract::SlashStar->extract($source);
+
+    my @comments;
+    while ($comments =~ m{/\*(.*?)\*/|//(.*?)$}msg) {
+        next unless defined $1 || defined $2;
+        push @comments, defined $1 ? [ block => $1 ] : [ line => $2 ];
+    }     
 
     return \@comments;
 }
@@ -31,7 +41,7 @@ use Doc::Simply::Carp;
 has _extractor => qw/is ro lazy_build 1/;
 sub _build__extractor {
     my $self = shift;
-    return Doc::Simply::Extract::Match->new(filter => sub { s/^\s*#// });
+    return Doc::Simply::Extract::Match->new(filter => sub { return unless s/^\s*#//; $_ });
 }
 
 sub extract {
@@ -58,6 +68,7 @@ sub extract {
         @source = @$source;
     }
     elsif (ref $source eq "") {
+        $source = $fixer->fix_eol($source);
         @source = split m/\n/, $source;
     }
     else {
@@ -70,9 +81,8 @@ sub extract {
         local $_;
         for my $line (@source) {
             next unless $line;
-            $_ = $line;
-            next unless $filter->($_);
-            push @comments, $_;
+            next unless defined ($line = $filter->($_));
+            push @comments, [ line => $line ];
         }
     }
 
