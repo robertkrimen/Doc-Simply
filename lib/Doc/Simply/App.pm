@@ -7,7 +7,7 @@ use Doc::Simply;
 use Doc::Simply::Extractor;
 use Doc::Simply::Assembler;
 use Doc::Simply::Parser;
-use Doc::Simply::Formatter::HTML;
+use Doc::Simply::Render::HTML;
 
 use Getopt::Chain;
 
@@ -16,30 +16,24 @@ my %type = (
 );
 my @types = keys %type;
 
-sub abort(@) {
-    print STDERR "$0: ";
-    if (@_) {
-        chomp $_[-1];
-        print STDERR join "", @_, "\n";
-    }
-    else {
-        print STDERR "Unknown error: aborting";
-    }
-    exit -1;
-}
-
 sub run {
     my $self = shift;
 
    Getopt::Chain->process(
 
-       options => [ qw/type:s/ ],
+        options => [qw/
+            type:s
+            style:s
+            css-file:s css-link:s css:s
+            js-file:s js-link:s js:s
+            wrapper-file:s
+        /],
 
        run => sub {
             my $context = shift;
 #            my $type = $context->options->{type} or abort "What type of source is the input? (@types)";
             my $type = $context->options->{type} || 'slash-star';
-            my $canonical_type = $type{$type} or abort "Don't know type \"$type\" (@types)";
+            my $canonical_type = $type{$type} or $context->abort("Don't know type \"$type\" (@types)");
 
             my $source = join "", <STDIN>;
 
@@ -52,10 +46,10 @@ sub run {
             my $parser = Doc::Simply::Parser->new;
             my $document = $parser->parse($blocks);
 
-            my $formatter = Doc::Simply::Formatter::HTML->new;
-            my $content = $formatter->format(document => $document);
+            my $formatter = Doc::Simply::Render::HTML->new;
+            my $render = $formatter->render(document => $document);
 
-            print $content;
+            print $render;
        },
    )
 

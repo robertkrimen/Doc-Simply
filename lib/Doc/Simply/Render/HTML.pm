@@ -1,11 +1,11 @@
-package Doc::Simply::Formatter::HTML;
+package Doc::Simply::Render::HTML;
 
 use Moose;
 use Doc::Simply::Carp;
 
 use Text::MultiMarkdown qw/markdown/;
 
-sub format {
+sub render {
     my $self = shift;
     my %given = @_;
 
