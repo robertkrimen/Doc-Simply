@@ -6,7 +6,7 @@ BUILD := lib/Doc/Simply/Render/HTML/TT.pm
 all: $(BUILD) test
 
 lib/Doc/Simply/Render/HTML/TT.pm: assets/tt/TT.pm assets/tt/frame.tt.html
-	tpage $< > $@
+	tpage $< | dos2unix > $@
 
 example: $(BUILD)
 	cat example.js | ./script/doc-simply >example.html
