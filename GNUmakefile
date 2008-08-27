@@ -5,7 +5,7 @@ BUILD := lib/Doc/Simply/Render/HTML/TT.pm
 
 all: $(BUILD) test
 
-lib/Doc/Simply/Render/HTML/TT.pm: assets/tt/TT.pm assets/tt/frame.tt.html
+lib/Doc/Simply/Render/HTML/TT.pm: assets/tt/TT.pm assets/tt/*.tt.html assets/css/*
 	tpage $< | dos2unix > $@
 
 example: $(BUILD)

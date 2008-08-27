@@ -8,7 +8,7 @@ use Doc::Simply::Render::HTML::TT;
 use Text::MultiMarkdown qw/markdown/;
 use Template;
 use JS::YUI::Loader;
-use HTML::Declare qw/LINK SCRIPT/;
+use HTML::Declare qw/LINK SCRIPT STYLE/;
 
 has tt => qw/is ro lazy_build 1 isa Template/;
 sub _build_tt {
@@ -91,6 +91,10 @@ sub css_render {
     if ($value = $given->{link}) {
         return LINK { rel => 'stylesheet', type => 'text/css', href => $value };
     }
+    elsif ($value = $given->{content}) {
+        $value = $$value if ref $value eq "SCALAR";
+        return STYLE { type => 'text/css', _ => $value };
+    }
     else {
         croak "Don't understand \"@{[ %$given ]}\"";
     }
@@ -116,14 +120,40 @@ sub render {
     my %given = @_;
 
     my $document = $given{document} or croak "Wasn't given document to format";
+    my $root = $document->root;
 
     my ($content, @css, @js);
 
+    my @index;
+
     {
+        my %state;
         $content = "";
-        $document->walk_down({ callback => sub {
+        $root->walk_down({ callback => sub {
             my $node = shift;
-            $content .= $self->_format_tag($node->tag, $node->content);
+            my $_content = $node->content;
+            if ($node->tag =~ m/^head\d+$/) {
+                push @index, $node;
+                if ($_content =~ m/^\s*NAME\s*$/ && ! $state{got_name}) {
+                    # TODO Move this into the parser
+                    $state{saw_name} = 1;
+                }
+                $_content = join '', "<a name=\"$_content\"></a>", $_content;
+            }
+            else {
+                if ($state{saw_name} && $_content =~ m/\S/) {
+                    delete $state{saw_name};
+                    my ($title, $name, $subtitle) = ($_content);
+                    chomp $title;
+                    $title =~ m/^\s*([^-]+)?(?:\s*-\s+(.*))?$/;
+                    $name = $1;
+                    $subtitle = $2;
+                    @{ $document->appendix }{qw/name title subtitle/} = ($name, $title, $subtitle);
+                    $state{got_name} = 1;
+
+                }
+            }
+            $content .= $self->_format_tag($node->tag, $_content);
             return 1;
         } });
         $content = markdown $content, { heading_ids => 0 };
@@ -135,6 +165,7 @@ sub render {
     if ($style eq "standard") {
         push @css, $self->css_render({ link =>  $yui->uri('reset-fonts-grids') });
         push @css, $self->css_render({ link =>  $yui->uri('base') });
+        push @css, $self->css_render({ content => Doc::Simply::Render::HTML::TT->css_standard });
     }
     elsif ($style eq "base") {
         push @css, $self->css_render({ link =>  $yui->uri('reset-fonts-grids') });
@@ -161,11 +192,7 @@ sub render {
         }
     }
 
-    $self->process_tt(input => \<<_END_, context => { content => $content, css => \@css, js => \@js });
-[% WRAPPER frame %]
-[% content %]
-[% END %]
-_END_
+    $self->process_tt(input => "document", context => { index => \@index, document => $document, content => $content, css => \@css, js => \@js });
 }
 
 sub _format_tag {
@@ -174,7 +201,7 @@ sub _format_tag {
     my $content = shift;
 
     if ($tag =~ m/^head(\d)/) {
-        return "#" x $1 . "$content\n";
+        return "<h$1 class=\"content-head$1 content-head\">$content</h$1>\n";
     }
 
     return $content;

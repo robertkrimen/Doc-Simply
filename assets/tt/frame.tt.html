@@ -10,9 +10,17 @@
 </head>
 <body>
 
-<div id="doc">
+<div id="doc2">
 
+[% IF document.appendix.title %]
+<div class="hd">
+    <span class="name">[% document.appendix.name %]</span> <span class="subtitle">[% document.appendix.subtitle %]</span>
+</div>
+[% END %]
+
+    <div class="bd">
 [% content %]
+    </div>
     
 </div>
 

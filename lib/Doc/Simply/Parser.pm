@@ -3,6 +3,8 @@ package Doc::Simply::Parser;
 use Moose;
 use Doc::Simply::Carp;
 
+use Doc::Simply::Document;
+
 sub node {
     my $self = shift;
     return Doc::Simply::Parser::Node->new(@_);
@@ -12,7 +14,8 @@ sub parse {
     my $self = shift;
     my $blocks = shift;
 
-    my $document = my $root_node = $self->node(tag => 'root');
+    my $root_node;
+    my $document = Doc::Simply::Document->new(root => ($root_node = $self->node(tag => 'root')));
 
     my (%state, $previous_node, $node);
 
@@ -57,7 +60,7 @@ use Doc::Simply::Carp;
 use base qw/Tree::DAG_Node/;
 
 has tag => qw/is ro required 1 isa Str/;
-has content => qw/is ro isa Str/, default => "";
+has content => qw/reader _content isa Str/, default => "";
 has tag_meta => qw/is ro lazy_build 1 isa Doc::Simply::Parser::Node::Meta/, handles => [qw/is_inline is_block is_stop is_tag level/];
 sub _build_tag_meta {
     my $self = shift;
@@ -90,6 +93,13 @@ sub add_node {
     my $parent_node = $self->_find_enclosing_node($node);
     $parent_node->add_daughter($node);
     return $parent_node;
+}
+
+sub content {
+    my $self = shift;
+    my $content = $self->_content;
+    $content =~ s/\s*$// if $self->tag_meta->is->{heading};
+    return $content;
 }
 
 sub content_of {
@@ -144,6 +154,7 @@ describe root => {
 describe head1 => {
     level => 1,
     is => {
+        heading => 1,
         block => 1,
     },
 };
@@ -151,6 +162,7 @@ describe head1 => {
 describe head2 => {
     level => 2,
     is => {
+        heading => 1,
         block => 1,
     },
 };
@@ -158,6 +170,7 @@ describe head2 => {
 describe head3 => {
     level => 3,
     is => {
+        heading => 1,
         block => 1,
     },
 };
@@ -165,6 +178,7 @@ describe head3 => {
 describe head4 => {
     level => 4,
     is => {
+        heading => 1,
         block => 1,
     },
 };
