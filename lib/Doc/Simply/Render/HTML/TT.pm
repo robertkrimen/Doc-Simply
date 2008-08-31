@@ -62,6 +62,10 @@ _END_
 
 sub css_standard {
     return <<_END_;
+body {
+    font-size: 116%;
+}
+
 a {
     color: #069;
 }
