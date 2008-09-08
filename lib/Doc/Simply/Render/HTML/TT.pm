@@ -21,16 +21,18 @@ sub build {
 
 <div id="doc2">
 
-[% IF document.appendix.title %]
-<div class="hd">
-    <span class="name">[% document.appendix.name %]</span> <span class="subtitle">[% document.appendix.subtitle %]</span>
-</div>
-[% END %]
-
-    <div class="bd">
-[% content %]
+<div class="dcmt-document">
+    [% IF document.appendix.title %]
+    <div class="hd">
+        <span class="name">[% document.appendix.name %]</span> <span class="subtitle">[% document.appendix.subtitle %]</span>
     </div>
-    
+    [% END %]
+
+        <div class="bd">
+    [% content %]
+        </div>
+        
+    </div>
 </div>
 
 [% FOREACH item = js %]
@@ -44,15 +46,17 @@ _END_
             document => <<_END_,
 [% WRAPPER frame title = document.appendix.title %]
 
-[% IF index %]
-    <ul class="index">
-    [% FOREACH node = index %]
-        <li class="index-[% node.tag %]"><a href="#[% node.content %]">[% node.content %]</a></li>
+<div class="dcmt-content">
+    [% IF index %]
+        <ul class="index">
+        [% FOREACH node = index %]
+            <li class="index-[% node.tag %]"><a href="#[% node.content %]">[% node.content %]</a></li>
+        [% END %]
+        </ul>
     [% END %]
-    </ul>
-[% END %]
 
-[% content %]
+    [% content %]
+</div>
 
 [% END %]
 
@@ -64,6 +68,7 @@ sub css_standard {
     return <<_END_;
 body {
     font-size: 116%;
+    background: #eee;
 }
 
 a {
@@ -121,7 +126,7 @@ pre {
 
 .hd {
     background: #def;
-    border-bottom: 2px solid #ccc;
+/*    border-bottom: 2px solid #ccc;*/
     padding: 0.25em 1em;
     text-align: left;
     color: #555;
@@ -140,6 +145,17 @@ pre {
     font-size: 85%;
 }
 
+
+.dcmt-document {
+    border: 3px solid #ccc;
+    border-top: none;
+    border-bottom: none;
+    background: #fff;
+}
+
+.dcmt-content {
+/*    border-left: 2px solid #aaa;*/
+}
 
 _END_
 }
