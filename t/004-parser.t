@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Most;
-use XXX;
+use t::Test;
 
 use Doc::Simply;
 use Doc::Simply::Extractor;
@@ -32,30 +32,8 @@ my $document = $parser->parse($blocks);
 #warn "\n";
 #warn map { "$_\n" } @{ $document->draw_ascii_tree };
 
-is($content = $document->content_from, <<_END_);
+is($content = $document->root->content_from, <<_END_);
 root 
 head2 This is a node
 body 
-_END_
-
-#$content =~ s/[ \t]/./g;
-#warn $content;
-
-__END__
-
-my $source = <<'_END_';
-/* 
- * @head2 Icky nesting
- * Some content
- *
- * @head1 Hello, World.
- *
- * @head2 Yikes. 
- * Some more content
- * With some *markdown* shiat!
- *
- *      And some more
- *      And some inline code
- *
- */
 _END_

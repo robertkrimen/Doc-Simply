@@ -3,10 +3,28 @@ package Doc::Simply::Extractor;
 use strict;
 use warnings;
 
+# This is a dummy package containing Extractor::SlashStar & Extractor::SimplePound 
+#
+# The ->extract method returns an ARRAY (reference) yielding either:
+#   
+#       line => <content>
+#       block => <content>
+
 use Text::FixEOL;
 our $fixer = Text::FixEOL->new;
 
 package Doc::Simply::Extractor::SlashStar;
+
+=head1 NAME
+
+Doc::Simply::Extractor::SlashStar - Extract content from /* ...  */ and // ... style commentary
+
+=head1 DESCRIPTION
+
+Doc::Simply::Extractor::SlashStar uses L<String::Comments::Extract> to parse JavaScript, Java, C, C++ content and extract
+only the comments
+
+=cut
 
 use Moose;
 use Doc::Simply::Carp;
@@ -32,6 +50,12 @@ sub extract {
 }
 
 package Doc::Simply::Extractor::SimplePound;
+
+=head1 NAME
+
+Doc::Simply::Extractor::SimplePound - Extract content from # ... style commentary
+
+=cut
 
 use Moose;
 use Doc::Simply::Carp;

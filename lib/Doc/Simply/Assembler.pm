@@ -1,5 +1,22 @@
 package Doc::Simply::Assembler;
 
+=head1 NAME
+
+Doc::Simply::Assembler - Assemble line and block comments into blocked content
+
+=head1 DESCRIPTION
+
+Doc::Simple::Assembler::assembler will iterate through each given comment and do the following:
+
+    1. Combining multiple contiguous lines into a single block
+    2. Preserving existing blocks
+
+The result will be a series of blocks, each containing a list of lines.
+
+In addition, it will normalize the content by stripping the first 1 to 2 spaces (if present) and removing a leading '*' (if present).
+
+=cut
+
 use Moose;
 use Doc::Simply::Carp;
 
