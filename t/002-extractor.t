@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Most;
-use XXX;
+#use XXX;
 
 use Doc::Simply;
 use Doc::Simply::Extractor;
@@ -11,8 +11,57 @@ plan qw/no_plan/;
 
 {
     my $extractor = Doc::Simply::Extractor::SlashStar->new;
-    my $comments = $extractor->extract(<<_END_)
+    my $comments = $extractor->extract(<<'_END_');
+/*
+ * @head2 Icky nesting
+ * Some content
+ *
+ * @head1 Hello, World.
+ *
+ * @head2 Yikes. 
+ * Some more content
+ * With some *markdown* content!
+ *
+ *      And some more
+ *      And some inline code
+ *
+ */
+
+/* Ignore this...
+*/
+
+/* @body 
+ * ...but grab **this**!
+        */
+
+// Another ignoreable comment
 _END_
+    cmp_deeply($comments, [
+        [ block => map { $_ . " " }  <<'_END_' ],
+
+ * @head2 Icky nesting
+ * Some content
+ *
+ * @head1 Hello, World.
+ *
+ * @head2 Yikes. 
+ * Some more content
+ * With some *markdown* content!
+ *
+ *      And some more
+ *      And some inline code
+ *
+_END_
+        [ block => <<'_END_' ],
+ Ignore this...
+_END_
+        [ block => map { local $_ = $_; chomp; $_ } <<'_END_' ],
+ @body 
+ * ...but grab **this**!
+        
+_END_
+        [ line => ' Another ignoreable comment' ],
+    ]);
 }
 
 

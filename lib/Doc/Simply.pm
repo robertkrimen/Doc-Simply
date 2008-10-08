@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-Doc::Simply - The great new Doc::Simply!
+Doc::Simply - Generate POD-like documentation from embedded comments in JavaScript, Java, C, C++ source
 
 =head1 VERSION
 
@@ -15,38 +15,63 @@ Version 0.01
 
 our $VERSION = '0.01';
 
-
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
+    doc-simply < source.js > documentation.html
 
-Perhaps a little code snippet.
+    doc-simply --help
 
-    use Doc::Simply;
+=head1 DESCRIPTION
 
-    my $foo = Doc::Simply->new();
-    ...
+Doc::Simply is bundled with C<doc-simply>, a command-line application that transforms (special) comments into documentation
 
-=head1 EXPORT
+It is modeled after Plain Old Documentation but it is not an exact mimic
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+=head1 OVERVIEW
 
-=head1 FUNCTIONS
+    * The input document is expected to have JavaScript, Java, C, C++-style comments: /* ... */ // ...
+    * The output document is HTML
+    * The markup style is POD-like, e.g. =head1, =head2, =body, ...
+    * The formatting style is Markdown (instead of the usual C<>, L<>, ...)
 
-=head2 function1
+=head1 Example JavaScript document
 
-=cut
+    /* 
+     * @head1 NAME
+     *
+     * Calculator - Add 2 + 2 and return the result
+     *
+     */
 
-sub function1 {
-}
+    // @head1 DESCRIPTION
+    // @body Add 2 + 2 and return the result (which should be 4)
 
-=head2 function2
+    /*
+     * @head1 FUNCTIONS
+     *
+     * @head2 twoPlusTwo
+     *
+     * Add 2 and 2 and return 4
+     *
+     */
 
-=cut
+    function twoPlusTwo() {
+        return 2 + 2; // Should return 4
+    }
 
-sub function2 {
-}
+=head1 SEE ALSO
+
+L<Text::Markdown>
+
+L<http://daringfireball.net/projects/markdown/syntax>
+
+=head1 SOURCE
+
+You can contribute or fork this project via GitHub:
+
+L<http://github.com/robertkrimen/doc-simply/tree/master>
+
+    git clone git://github.com/robertkrimen/doc-simply.git Doc-Simply
 
 =head1 AUTHOR
 

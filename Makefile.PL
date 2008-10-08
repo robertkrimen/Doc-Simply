@@ -3,6 +3,8 @@ use inc::Module::Install;
 name 'Doc-Simply';
 all_from 'lib/Doc/Simply.pm';
 
+resources repository => 'http://github.com/robertkrimen/doc-simply/tree/master';
+
 {
     require ExtUtils::MakeMaker;
     use strict;

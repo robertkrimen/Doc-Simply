@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Most;
-use XXX;
+#use XXX;
 
 use Doc::Simply;
 use Doc::Simply::Extractor;

@@ -2,15 +2,74 @@ use strict;
 use warnings;
 
 use Test::Most;
-use XXX;
+#use XXX;
 
 use Doc::Simply;
+use Doc::Simply::Extractor;
 use Doc::Simply::Assembler;
 
 plan qw/no_plan/;
 
 {
+    my $extractor = Doc::Simply::Extractor::SlashStar->new;
     my $assembler = Doc::Simply::Assembler->new;
+    my $blocks = $assembler->assemble($extractor->extract(<<'_END_'));
+/*
+ * @head2 Icky nesting
+ * Some content
+ *
+ * @head1 Hello, World.
+ *
+ * @head2 Yikes. 
+ * Some more content
+ * With some *markdown* content!
+ *
+ *      And some more
+ *      And some inline code
+ *
+ */
+
+/* Ignore this...
+*/
+
+/* @body 
+ * ...but grab **this**!
+        */
+
+// Another ignoreable comment
+_END_
+    cmp_deeply($blocks, [
+        [
+'',
+'@head2 Icky nesting',
+'Some content',
+'',
+'@head1 Hello, World.',
+'',
+'@head2 Yikes. ',
+'Some more content',
+'With some *markdown* content!',
+'',
+'     And some more',
+'     And some inline code',
+'',
+'',
+        ],
+
+        [
+'Ignore this...'
+        ],
+
+        [
+'@body ',
+'...but grab **this**!',
+'       ',
+        ],
+
+        [
+'Another ignoreable comment'
+        ],
+    ]);
 }
 
 
