@@ -15,7 +15,6 @@ inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
-lib/Doc/.Simply.pm.swp
 lib/Doc/Simply/App.pm
 lib/Doc/Simply/Assembler.pm
 lib/Doc/Simply/Carp.pm
