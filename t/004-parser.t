@@ -35,11 +35,11 @@ _END_
     my $parser = Doc::Simply::Parser->new;
     my $document = $parser->parse($blocks);
 
-    is($content = $document->root->content_from, <<_END_);
-root 
-head2 This is a node
-body 
-_END_
+    like($content = $document->root->content_from, qr{
+\Qroot\E\s*
+\Qhead2 This is a node\E\s*
+\Qbody\E\s*
+    }sx);
 }
 
 {
@@ -83,20 +83,76 @@ _END_
 root 
 head2 Icky nesting
 body Some content
-body 
+body
 head1 Hello, World.
-body 
+body
 head2 Yikes.
 body Some more content
 body With some *markdown* content!
-body 
+body
 body      And some more
 body      And some inline code
-body 
-body 
-body 
+body
+body
+body
 body ...but grab **this**!
 body 
+_END_
+    is($_[0], $_[1]);
+}
+
+{
+
+    my $content;
+    my $source = <<'_END_';
+    /* 
+     * @head1 NAME
+     *
+     * Calculator - Add 2 + 2 and return the result
+     *
+     */
+
+    // @head1 DESCRIPTION
+    // @body Add 2 + 2 and return the result (which should be 4)
+
+    /*
+     * @head1 FUNCTIONS
+     *
+     * @head2 twoPlusTwo
+     *
+     * Add 2 and 2 and return 4
+     *
+     */
+
+    function twoPlusTwo() {
+        return 2 + 2; // Should return 4
+    }
+_END_
+
+    my $extractor = Doc::Simply::Extractor::SlashStar->new;
+    my $comments = $extractor->extract($source);
+
+    my $assembler = Doc::Simply::Assembler->new;
+    my $blocks = $assembler->assemble($comments);
+
+    my $parser = Doc::Simply::Parser->new;
+    my $document = $parser->parse($blocks);
+    local @_ = map { normalize $_ } ($content = $document->root->content_from, <<_END_);
+root
+head1 NAME
+body
+body Calculator - Add 2 + 2 and return the result
+body
+body
+head1 DESCRIPTION
+body Add 2 + 2 and return the result (which should be 4)
+head1 FUNCTIONS
+body
+head2 twoPlusTwo
+body
+body Add 2 and 2 and return 4
+body
+body
 _END_
     is($_[0], $_[1]);
 }

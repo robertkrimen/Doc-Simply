@@ -64,8 +64,47 @@ _END_
     ]);
 }
 
+{
+    my $extractor = Doc::Simply::Extractor::SlashStar->new;
+    my $comments = $extractor->extract(<<'_END_');
+    /* 
+     * @head1 NAME
+     *
+     * Calculator - Add 2 + 2 and return the result
+     *
+     */
 
-ok(1);
+    // @head1 DESCRIPTION
+    // @body Add 2 + 2 and return the result (which should be 4)
+
+    /*
+     * @head1 FUNCTIONS
+     *
+     * @head2 twoPlusTwo
+     *
+     * Add 2 and 2 and return 4
+     *
+     */
+
+    function twoPlusTwo() {
+        return 2 + 2; // Should return 4
+    }
+_END_
+    cmp_deeply($comments, [
+        [ block => re(qr{
+            .*\@head1\ NAME.*
+            .*\QCalculator - Add 2 + 2 and return the result\E.*
+        }sx) ],
+        [ line => ' @head1 DESCRIPTION' ],
+        [ line => ' @body Add 2 + 2 and return the result (which should be 4)' ],
+        [ block => re(qr{
+            .*\@head1\ FUNCTIONS.*
+            .*\@head2\ twoPlusTwo.*
+            .*\QAdd 2 and 2 and return 4\E.*
+        }sx) ],
+        [ line => ' Should return 4' ],
+    ]);
+}
 
 __END__
 

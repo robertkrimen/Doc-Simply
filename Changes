@@ -1,5 +1,5 @@
-Revision history for Doc-Simply
+0.02 Wednesday October 08 18:16:40 PDT 2008: 
+    - Normalize leading space on blocks to the shortest lead (allows indented /* */ comments)
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
-
+0.01 Wednesday October 07 2008:
+    - Initial release

@@ -23,7 +23,7 @@ use Doc::Simply::Carp;
 has normalizer => qw/is ro lazy_build 1 isa CodeRef/;
 sub _build_normalizer {
     return sub {
-        s/^( \*)?\s{0,1}//; $_;
+        s/^( ?\*)?\s{0,1}//; $_;
     }
 }
 
@@ -37,12 +37,25 @@ sub assemble {
     for my $comment (@$comments) {
         my ($type, $content) = @$comment;
         my @content = split m/\n/, $content;
-        @content = map { $normalizer->($_) } @content;
         if ($type eq "line") {
+            @content = map { $normalizer->($_) } @content;
             push @block, @content;
         }
         else {
-            push @blocks, \@block if @block;
+            push @blocks, [ @block ] if @block;
+            undef @block;
+            # Normalize leading whitespace
+            my $shortest;
+            for (@content) {
+                m/^(\s*)\S/ or next;
+                $shortest = length $1 unless defined $shortest;
+                $shortest = length $1 if $shortest > length $1;
+            }
+            for (@content) {
+                m/^(\s*)\S/ or next;
+                $_ = substr $_, $shortest;
+            }
+            @content = map { $normalizer->($_) } @content;
             push @blocks, [ @content ];
         }
     }

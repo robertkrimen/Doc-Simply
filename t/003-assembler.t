@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Most;
-#use XXX;
+use XXX;
 
 use Doc::Simply;
 use Doc::Simply::Extractor;
@@ -72,8 +72,83 @@ _END_
     ]);
 }
 
+{
+    my $extractor = Doc::Simply::Extractor::SlashStar->new;
+    my $assembler = Doc::Simply::Assembler->new;
+    my $blocks = $assembler->assemble($extractor->extract(<<'_END_'));
+    /* 
+     * @head1 NAME
+     *
+     * Calculator - Add 2 + 2 and return the result
+     *
+     */
 
-ok(1);
+    // @head1 DESCRIPTION
+    // @body Add 2 + 2 and return the result (which should be 4)
+
+    /*
+     * @head1 FUNCTIONS
+     *
+     * @head2 twoPlusTwo
+     *
+     * Add 2 and 2 and return 4
+     *
+     */
+
+    function twoPlusTwo() {
+        return 2 + 2; // Should return 4
+    }
+_END_
+    cmp_deeply($blocks, [
+        [
+            '',
+            '@head1 NAME',
+            '',
+            'Calculator - Add 2 + 2 and return the result',
+            '',
+            '    ',
+        ],
+        [
+            '@head1 DESCRIPTION',
+            '@body Add 2 + 2 and return the result (which should be 4)',
+        ],
+        [
+            '',
+            '@head1 FUNCTIONS',
+            '',
+            '@head2 twoPlusTwo',
+            '',
+            'Add 2 and 2 and return 4',
+            '',
+            '    ',
+        ],
+        [
+            'Should return 4',
+        ],
+#-
+#  - ''
+#  - '    * @head1 NAME'
+#  - '    *'
+#  - '    * Calculator - Add 2 + 2 and return the result'
+#  - '    *'
+#  - '    '
+#- &1
+#  - '@head1 DESCRIPTION'
+#  - '@body Add 2 + 2 and return the result (which should be 4)'
+#  - Should return 4
+#-
+#  - ''
+#  - '    * @head1 FUNCTIONS'
+#  - '    *'
+#  - '    * @head2 twoPlusTwo'
+#  - '    *'
+#  - '    * Add 2 and 2 and return 4'
+#  - '    *'
+#  - '    '
+
+    ]);
+}
+
 
 __END__
 
