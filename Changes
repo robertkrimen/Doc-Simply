@@ -1,3 +1,6 @@
+0.03 Sunday February 22 15:26:16 PST 2009:
+    - Got rid of XXX.pm appearance in t/ that was killing testability
+
 0.02 Wednesday October 08 18:16:40 PDT 2008: 
     - Normalize leading space on blocks to the shortest lead (allows indented /* */ comments)
 
