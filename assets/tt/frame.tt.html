@@ -13,16 +13,16 @@
 <div id="doc2">
 
 <div class="dcmt-document">
-    [% IF document.appendix.title -%]
+    [%- IF document.appendix.title %]
     <div class="hd">
         <span class="name">[% document.appendix.name %]</span> <span class="subtitle">[% document.appendix.subtitle %]</span>
     </div>
-    [% END -%]
+    [%- END %]
         <div class="bd">
     [% content %]
         </div>
     </div>
 </div>
-[%- FOREACH item = js %][% item %][% END -%]
+[%- FOREACH item = js %][% item %][% END %]
 </body>
 </html>

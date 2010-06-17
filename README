@@ -1,52 +1,69 @@
-Doc-Simply
+NAME
+    Doc::Simply - Generate POD-like documentation from embedded comments in
+    JavaScript, Java, C, C++ source
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
+VERSION
+    version 0.031
 
-A README file is required for CPAN modules since CPAN extracts the README
-file from a module distribution so that people browsing the archive
-can use it to get an idea of the module's uses. It is usually a good idea
-to provide version information here so that people can decide whether
-fixes for the module are worth downloading.
+SYNOPSIS
+        doc-simply < source.js > documentation.html
 
+        doc-simply --help
 
-INSTALLATION
+DESCRIPTION
+    Doc::Simply is bundled with "doc-simply", a commandline application that
+    transforms (special) comments into documentation
 
-To install this module, run the following commands:
+    It is modeled after Plain Old Documentation but it is not an exact mimic
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+OVERVIEW
+        * The input document is expected to have JavaScript, Java, C, C++-style comments: /* ... */ // ...
+        * The output document is HTML
+        * The markup style is POD-like, e.g. =head1, =head2, =body, ...
+        * The formatting style is Markdown (instead of the usual C<>, L<>, ...)
 
-SUPPORT AND DOCUMENTATION
+Example JavaScript document
+        /* 
+         * @head1 NAME
+         *
+         * Calculator - Add 2 + 2 and return the result
+         *
+         */
 
-After installing, you can find documentation for this module with the
-perldoc command.
+        // @head1 DESCRIPTION
+        // @body Add 2 + 2 and return the result (which should be 4)
 
-    perldoc Doc::Simply
+        /*
+         * @head1 FUNCTIONS
+         *
+         * @head2 twoPlusTwo
+         *
+         * Add 2 and 2 and return 4
+         *
+         */
 
-You can also look for information at:
+        function twoPlusTwo() {
+            return 2 + 2; // Should return 4
+        }
 
-    RT, CPAN's request tracker
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Doc-Simply
+SEE ALSO
+    Text::Markdown
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Doc-Simply
+    <http://daringfireball.net/projects/markdown/syntax>
 
-    CPAN Ratings
-        http://cpanratings.perl.org/d/Doc-Simply
+SOURCE
+    You can contribute or fork this project via GitHub:
 
-    Search CPAN
-        http://search.cpan.org/dist/Doc-Simply
+    <http://github.com/robertkrimen/Doc-Simply/tree/master>
 
+        git clone git://github.com/robertkrimen/Doc-Simply.git Doc-Simply
 
-COPYRIGHT AND LICENCE
+AUTHOR
+      Robert Krimen <robertkrimen@gmail.com>
 
-Copyright (C) 2008 Robert Krimen
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2010 by Robert Krimen.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
 

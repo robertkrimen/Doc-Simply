@@ -1,4 +1,8 @@
-0.031:
+0.031 Wednesday June 16 19:21:24 PDT 2010:
+    - Got rid of some bogus dependencies and streamlined operations:
+    - No more YUI::Loader, Getopt::Chain, Moose (using Any::Moose)
+    - Minor tweaks to html, using latest YUI (2.8.?) .css
+    - Converted build system to dzpl
     
 0.030 Sunday February 22 15:26:16 PST 2009:
     - Got rid of XXX.pm appearance in t/ that was killing testability
