@@ -1,6 +1,5 @@
 package Doc::Simply::App;
 
-use Any::Moose;
 use Doc::Simply::Carp;
 
 use Doc::Simply;
@@ -15,8 +14,9 @@ my %type = (
 );
 my @types = keys %type;
 
-use Getopt::Usaginator <<_END_
-Usage: $0 [options] < [infile] > [outfile]
+use Getopt::Usaginator <<_END_;
+
+Usage: doc-simply [options] < [infile] > [outfile]
 
 Parse infile (stdin), which can be a .js, .java, .c, .cpp file and write to outfile (stdout), an HTML document
 
@@ -56,12 +56,11 @@ sub run {
     my @arguments = @_;
 
     my ( $help, $type );
-
     $type = 'slash-star';
     {
         local @ARGV = @arguments;
         GetOptions(
-            'type=s' => \$type;
+            'type=s' => \$type,
             'help|h|?' => \$help,
         );
 
