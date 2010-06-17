@@ -26,7 +26,7 @@ only the comments
 
 =cut
 
-use Moose;
+use Any::Moose;
 use Doc::Simply::Carp;
 
 use String::Comments::Extract;
@@ -57,7 +57,7 @@ Doc::Simply::Extractor::SimplePound - Extract content from # ... style commentar
 
 =cut
 
-use Moose;
+use Any::Moose;
 use Doc::Simply::Carp;
 
 # TODO Does not deal with multi-line strings, etc.
@@ -75,7 +75,7 @@ sub extract {
 
 package Doc::Simply::Extractor::Filter;
 
-use Moose;
+use Any::Moose;
 use Doc::Simply::Carp;
 
 has filter => qw/is ro required 1 isa CodeRef/;

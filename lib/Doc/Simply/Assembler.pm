@@ -17,7 +17,7 @@ In addition, it will normalize the content by stripping the first 1 to 2 spaces 
 
 =cut
 
-use Moose;
+use Any::Moose;
 use Doc::Simply::Carp;
 
 has normalizer => qw/is ro lazy_build 1 isa CodeRef/;

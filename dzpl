@@ -8,7 +8,7 @@ use Dzpl
 
     require => q/
         Carp::Clan::Share
-        # Getopt::Chain
+        Getopt::Usaginator
         HTML::Declare
         # Moose
         Parse::Yapp::Driver

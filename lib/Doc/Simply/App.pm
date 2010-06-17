@@ -1,6 +1,6 @@
 package Doc::Simply::App;
 
-use Moose;
+use Any::Moose;
 use Doc::Simply::Carp;
 
 use Doc::Simply;

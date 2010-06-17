@@ -1,6 +1,6 @@
 package Doc::Simply::Render::HTML;
 
-use Moose;
+use Any::Moose;
 use Doc::Simply::Carp;
 
 use Doc::Simply::Render::HTML::TT;

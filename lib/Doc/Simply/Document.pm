@@ -1,6 +1,6 @@
 package Doc::Simply::Document;
 
-use Moose;
+use Any::Moose;
 use Doc::Simply::Carp;
 
 use Doc::Simply::Parser;

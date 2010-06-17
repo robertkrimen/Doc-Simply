@@ -1,6 +1,6 @@
 package Doc::Simply::Parser;
 
-use Moose;
+use Any::Moose;
 use Doc::Simply::Carp;
 
 use Doc::Simply::Document;
@@ -126,7 +126,7 @@ sub content_from {
 
 package Doc::Simply::Parser::Node::Meta;
 
-use Moose;
+use Any::Moose;
 use Doc::Simply::Carp;
 
 has tag => qw/is ro required 1 isa Str/;
