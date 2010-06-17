@@ -3,7 +3,7 @@ NAME
     JavaScript, Java, C, C++ source
 
 VERSION
-    version 0.031
+    version 0.032
 
 SYNOPSIS
         doc-simply < source.js > documentation.html

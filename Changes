@@ -1,3 +1,6 @@
+0.032 Wednesday June 16 21:27:46 PDT 2010:
+    - Fixed documentation
+
 0.031 Wednesday June 16 19:21:24 PDT 2010:
     - Got rid of some bogus dependencies and streamlined operations:
     - No more YUI::Loader, Getopt::Chain, Moose (using Any::Moose)

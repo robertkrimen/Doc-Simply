@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use Dzpl
     name => 'Doc-Simply',
-    version => '0.031',
+    version => '0.032',
     author => 'Robert Krimen <robertkrimen@gmail.com>',
     license => 'Perl5',
     copyright => 'Robert Krimen',
