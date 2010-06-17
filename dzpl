@@ -1,0 +1,28 @@
+#!/usr/bin/env perl
+use Dzpl
+    name => 'Doc-Simply',
+    version => '0.031',
+    author => 'Robert Krimen <robertkrimen@gmail.com>',
+    license => 'Perl5',
+    copyright => 'Robert Krimen',
+
+    require => q/
+        Carp::Clan::Share
+        # Getopt::Chain
+        HTML::Declare
+        # JS::YUI::Loader
+        # Moose
+        Parse::Yapp::Driver
+        String::Comments::Extract
+        Template
+        Text::FixEOL
+        Text::MultiMarkdown
+        Tree::DAG_Node
+
+        [Test]
+        Test::Most
+    /,
+;
+
+{ plugin '@ROKR' }
+
