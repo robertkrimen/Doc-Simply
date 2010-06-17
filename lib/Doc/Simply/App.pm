@@ -2,11 +2,6 @@ package Doc::Simply::App;
 
 use Doc::Simply::Carp;
 
-use Doc::Simply;
-use Doc::Simply::Extractor;
-use Doc::Simply::Assembler;
-use Doc::Simply::Parser;
-use Doc::Simply::Render::HTML;
 use Getopt::Long qw/ GetOptions /;
 
 my %type = (
@@ -76,17 +71,26 @@ sub run {
 
     my $source = join '', <STDIN>;
 
-    my $extractor = Doc::Simply::Extractor::SlashStar->new;
-    my $comments = $extractor->extract( $source );
+    eval {
+        require Doc::Simply;
+        require Doc::Simply::Extractor;
+        require Doc::Simply::Assembler;
+        require Doc::Simply::Parser;
+        require Doc::Simply::Render::HTML;
 
-    my $assembler = Doc::Simply::Assembler->new;
-    my $blocks = $assembler->assemble( $comments );
+        my $extractor = Doc::Simply::Extractor::SlashStar->new;
+        my $comments = $extractor->extract( $source );
 
-    my $parser = Doc::Simply::Parser->new;
-    my $document = $parser->parse( $blocks );
+        my $assembler = Doc::Simply::Assembler->new;
+        my $blocks = $assembler->assemble( $comments );
 
-    my $formatter = Doc::Simply::Render::HTML->new;
-    my $render = $formatter->render( document => $document );
+        my $parser = Doc::Simply::Parser->new;
+        my $document = $parser->parse( $blocks );
 
-    print $render;
+        my $formatter = Doc::Simply::Render::HTML->new;
+        my $render = $formatter->render( document => $document );
+
+        print $render;
+    } or
+    die $@;
 }
