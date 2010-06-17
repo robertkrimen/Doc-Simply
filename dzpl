@@ -10,7 +10,6 @@ use Dzpl
         Carp::Clan::Share
         Getopt::Usaginator
         HTML::Declare
-        # Moose
         Parse::Yapp::Driver
         String::Comments::Extract
         Template
