@@ -192,7 +192,7 @@ sub render {
         }
     }
 
-    $self->process_tt(input => "document", context => { index => \@index, document => $document, content => $content, css => \@css, js => \@js });
+    $self->process_tt( input => "document", context => { index => \@index, document => $document, content => $content, css => \@css, js => \@js } );
 }
 
 sub _format_tag {

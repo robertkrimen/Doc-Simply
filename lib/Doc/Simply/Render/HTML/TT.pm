@@ -8,8 +8,8 @@ sub build {
         BLOCKS => {
             frame => <<_END_,
 [% CLEAR -%]
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html>
 <head>
 <title>[% title %]</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
@@ -22,44 +22,33 @@ sub build {
 <div id="doc2">
 
 <div class="dcmt-document">
-    [% IF document.appendix.title %]
+    [% IF document.appendix.title -%]
     <div class="hd">
         <span class="name">[% document.appendix.name %]</span> <span class="subtitle">[% document.appendix.subtitle %]</span>
     </div>
-    [% END %]
-
+    [% END -%]
         <div class="bd">
     [% content %]
         </div>
-        
     </div>
 </div>
-
-[% FOREACH item = js %]
-[% item %]
-[% END %]
-
+[%- FOREACH item = js %][% item %][% END -%]
 </body>
 </html>
-
 _END_
             document => <<_END_,
-[% WRAPPER frame title = document.appendix.title %]
-
+[% WRAPPER frame title = document.appendix.title -%]
 <div class="dcmt-content">
-    [% IF index %]
+    [% IF index -%]
         <ul class="index">
-        [% FOREACH node = index %]
+        [% FOREACH node = index -%]
             <li class="index-[% node.tag %]"><a href="#[% node.content %]">[% node.content %]</a></li>
-        [% END %]
+        [% END -%]
         </ul>
-    [% END %]
-
+    [% END -%]
     [% content %]
 </div>
-
-[% END %]
-
+[% END -%]
 _END_
         },
 }
@@ -156,7 +145,6 @@ pre {
 .dcmt-content {
 /*    border-left: 2px solid #aaa;*/
 }
-
 _END_
 }
 

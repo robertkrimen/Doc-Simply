@@ -1,15 +1,12 @@
-[% WRAPPER frame title = document.appendix.title %]
-
+[% WRAPPER frame title = document.appendix.title -%]
 <div class="dcmt-content">
-    [% IF index %]
+    [% IF index -%]
         <ul class="index">
-        [% FOREACH node = index %]
+        [% FOREACH node = index -%]
             <li class="index-[% node.tag %]"><a href="#[% node.content %]">[% node.content %]</a></li>
-        [% END %]
+        [% END -%]
         </ul>
-    [% END %]
-
+    [% END -%]
     [% content %]
 </div>
-
-[% END %]
+[% END -%]
