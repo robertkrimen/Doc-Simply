@@ -8,42 +8,38 @@ use Doc::Simply::Extractor;
 use Doc::Simply::Assembler;
 use Doc::Simply::Parser;
 use Doc::Simply::Render::HTML;
-
-use Getopt::Chain;
+use Getopt::Long qw/ GetOptions /;
 
 my %type = (
-    (map { $_ => 'slash-star' } qw/slash-star js javascript c c++ cpp java/),
+    (map { $_ => 'slash-star' } qw/ slash-star js javascript c c++ cpp java /),
 );
 my @types = keys %type;
 
-sub usage {
-    print <<_END_;
-Usage: $0 [OPTION] < [INFILE] > [OUTFILE]
+use Getopt::Usaginator <<_END_
+Usage: $0 [options] < [infile] > [outfile]
 
-Parse INFILE (stdin), which can be a .js, .java, .c, .cpp file and write to OUTFILE (stdout), an HTML document
+Parse infile (stdin), which can be a .js, .java, .c, .cpp file and write to outfile (stdout), an HTML document
 
-Where OPTION can be:
+With options:
 
     -h, --help      Show this help
-_END_
-    print <<'_END_';
 
 Here is an example Doc::Simply-compatible JavaScript document:
 
     /* 
-     * @head1 NAME
+     * \@head1 NAME
      *
      * Calculator - Add 2 + 2 and return the result
      *
      */
 
-    // @head1 DESCRIPTION
-    // @body Add 2 + 2 and return the result (which should be 4)
+    // \@head1 DESCRIPTION
+    // \@body Add 2 + 2 and return the result (which should be 4)
 
     /*
-     * @head1 FUNCTIONS
+     * \@head1 FUNCTIONS
      *
-     * @head2 twoPlusTwo
+     * \@head2 twoPlusTwo
      *
      * Add 2 and 2 and return 4
      *
@@ -54,64 +50,44 @@ Here is an example Doc::Simply-compatible JavaScript document:
     }
 
 _END_
-}
 
 sub run {
     my $self = shift;
+    my @arguments = @_;
 
-    Getopt::Chain->process(
+    my ( $help, $type );
 
-        options => [qw/
-            type:s
-            style:s
-            css-file:s css-link:s css:s
-            js-file:s js-link:s js:s
-            wrapper-file:s
-            help|h
-        /],
+    $type = 'slash-star';
+    {
+        local @ARGV = @arguments;
+        GetOptions(
+            'type=s' => \$type;
+            'help|h|?' => \$help,
+        );
 
-        run => sub {
-            my $context = shift;
+        # style:s
+        # css-file:s css-link:s css:s
+        # js-file:s js-link:s js:s
+        # wrapper-file:s
+    }
 
-            if ($context->options->{help}) {
-                usage;
-                return;
-            }
+    usage 0 if $help;
 
-#            if ($context->arguments->[0]) {
-#                return;
-#            }
+    my $canonical_type = $type{$type} or usage "Invalid type \"$type\" (@types)";
 
-#            my $type = $context->options->{type} or abort "What type of source is the input? (@types)";
+    my $source = join '', <STDIN>;
 
-            my $type = $context->options->{type} || 'slash-star';
-            my $canonical_type = $type{$type} or $context->abort("Don't know type \"$type\" (@types)");
+    my $extractor = Doc::Simply::Extractor::SlashStar->new;
+    my $comments = $extractor->extract( $source );
 
-            my $source = join "", <STDIN>;
+    my $assembler = Doc::Simply::Assembler->new;
+    my $blocks = $assembler->assemble( $comments );
 
-            my $extractor = Doc::Simply::Extractor::SlashStar->new;
-            my $comments = $extractor->extract($source);
+    my $parser = Doc::Simply::Parser->new;
+    my $document = $parser->parse( $blocks );
 
-            my $assembler = Doc::Simply::Assembler->new;
-            my $blocks = $assembler->assemble($comments);
+    my $formatter = Doc::Simply::Render::HTML->new;
+    my $render = $formatter->render( document => $document );
 
-            my $parser = Doc::Simply::Parser->new;
-            my $document = $parser->parse($blocks);
-
-            my $formatter = Doc::Simply::Render::HTML->new;
-            my $render = $formatter->render(document => $document);
-
-            print $render;
-        },
-
-        commands => {
-
-            help => sub {
-                my $context = shift;
-                usage;
-            },
-
-        },
-   )
-
+    print $render;
 }
